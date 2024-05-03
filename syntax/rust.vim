@@ -12,6 +12,16 @@ elseif exists("b:current_syntax")
     finish
 endif
 
+syn match Repeat        '\([^\.]\(\.\|\(::\)\)\)\@<=\w\w*'
+syn match Constant       '[{}\[\]()]'
+syn match PreProc        '[@]'
+syn match rustSymbol    '[,;]'
+syn match Operator       '[\+\-\%=\/\^\&\*!?><\$|~#]'
+syn match SpecialComment '[`:\.]'
+syn match Constant       '[{}\[\]()]'
+hi def rustSymbol ctermfg=DarkGray guifg=DarkGray
+"syn match rustType       '\(\w\w*\s*\(\(<.*>\)\|\(\[.*\]\)\)*\s*:\s*&*\(mut\)*\s*\)\@<=\w\w*'
+
 " Syntax definitions {{{1
 " Basic keywords {{{2
 syn keyword   rustConditional match if else
@@ -128,8 +138,8 @@ syn match     rustFuncCall    "\w\(\w\)*::<"he=e-3,me=e-3 " foo::<T>();
 
 syn match     rustOperator     display "\%(+\|-\|/\|*\|=\|\^\|&\||\|!\|>\|<\|%\)=\?"
 " This one isn't *quite* right, as we could have binary-& with a reference
-syn match     rustSigil        display /&\s\+[&~@*][^)= \t\r\n]/he=e-1,me=e-1
-syn match     rustSigil        display /[&~@*][^)= \t\r\n]/he=e-1,me=e-1
+syn match     Exception   display /&\s\+[&~@*][^)= \t\r\n]/he=e-1,me=e-1
+syn match     Exception   display /[&~@*][^)= \t\r\n]/he=e-1,me=e-1
 " This isn't actually correct; a closure with no arguments can be `|| { }`.
 " Last, because the & in && isn't a sigil
 syn match     rustOperator     display "&&\|||"
@@ -316,7 +326,7 @@ hi def link rustBoolean       Boolean
 hi def link rustEnum          rustType
 hi def link rustEnumVariant   rustConstant
 hi def link rustConstant      Constant
-hi def link rustSelf          Constant
+hi def link rustSelf          Label
 hi def link rustFloat         Float
 hi def link rustArrowCharacter rustOperator
 hi def link rustOperator      Operator
@@ -331,12 +341,12 @@ hi def link rustPubScopeCrate rustKeyword
 hi def link rustSuper         rustKeyword
 hi def link rustUnsafeKeyword Exception
 hi def link rustReservedKeyword Error
-hi def link rustRepeat        Conditional
+hi def link rustRepeat        Repeat
 hi def link rustConditional   Conditional
 hi def link rustIdentifier    Identifier
 hi def link rustCapsIdent     rustIdentifier
 hi def link rustModPath       Include
-hi def link rustModPathSep    Delimiter
+hi def link rustModPathSep    SpecialComment
 hi def link rustFunction      Function
 hi def link rustFuncName      Function
 hi def link rustFuncCall      Function
@@ -353,7 +363,8 @@ hi def link rustCommentDocCodeFence rustCommentLineDoc
 hi def link rustAssert        PreCondit
 hi def link rustPanic         PreCondit
 hi def link rustMacro         Macro
-hi def link rustType          Type
+"hi def link rustType          SpecialComment
+hi def rustType   ctermfg=DarkCyan guifg=DarkCyan
 hi def link rustTodo          Todo
 hi def link rustAttribute     PreProc
 hi def link rustDerive        PreProc
