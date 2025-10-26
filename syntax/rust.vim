@@ -12,15 +12,17 @@ elseif exists("b:current_syntax")
     finish
 endif
 
-syn match Repeat        '\([^\.]\(\.\|\(::\)\)\)\@<=\w\w*'
-syn match Constant       '[{}\[\]()]'
-syn match PreProc        '[@]'
-syn match rustSymbol    '[,;]'
-syn match Operator       '[\+\-\%=\/\^\&\*!?><\$|~#]'
-syn match SpecialComment '[`:\.]'
-syn match Constant       '[{}\[\]()]'
+syn match PreProc       '[@]'
+syn match rustSymbol    '[,;:\.]'
+syn match Constant      '[{}\[\]()]'
+syn match Operator      '[\+\-\%=\/\^\&\*!?><\$|~#]'
 hi def rustSymbol ctermfg=DarkGray guifg=DarkGray
-"syn match rustType       '\(\w\w*\s*\(\(<.*>\)\|\(\[.*\]\)\)*\s*:\s*&*\(mut\)*\s*\)\@<=\w\w*'
+syn match rustType      '\<[A-Z_]\+[a-z_]\+\w*\>'
+syn match rustMacro     '\<[A-Z_]\+\>'
+syn match Repeat        '\([^\.]\(\.\|\(::\)\)\)\@<=\w\w*'
+syn match rustType      '\v(\.@1<!|\.\.)\zs<([iu][0-9]{1,3})?>' display
+syn match rustType      '\(:\s*&\?\)\@<=\w\w*\(\(\(\(\[.*\]\)\|\({.*}\)\|\(\w\+\)\|\(\*\|?\|!\)\)\s*\)*\)\@='
+syn match rustType      "\v\w+\ze\<.*\>" "foo<T>();
 
 " Syntax definitions {{{1
 " Basic keywords {{{2
@@ -62,6 +64,7 @@ syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 syn keyword   rustKeyword     mod trait nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustStorage     move mut ref static const
 syn match     rustDefault     /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
+syn keyword   rustTypedef     impl nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustAwait       await
 syn match     rustKeyword     /\<try\>!\@!/ display
 
@@ -343,7 +346,8 @@ hi def link rustUnsafeKeyword Exception
 hi def link rustReservedKeyword Error
 hi def link rustRepeat        Repeat
 hi def link rustConditional   Conditional
-hi def link rustIdentifier    Identifier
+"hi def link rustIdentifier    Identifier
+hi def link rustIdentifier    Changed
 hi def link rustCapsIdent     rustIdentifier
 hi def link rustModPath       Include
 hi def link rustModPathSep    SpecialComment
@@ -362,14 +366,18 @@ hi def link rustCommentBlockDocError Error
 hi def link rustCommentDocCodeFence rustCommentLineDoc
 hi def link rustAssert        PreCondit
 hi def link rustPanic         PreCondit
-hi def link rustMacro         Macro
+"hi def link rustMacro         Added
+"hi def link rustMacro         Macro
+hi def link rustMacro         SpecialComment
 "hi def link rustType          SpecialComment
-hi def rustType   ctermfg=DarkCyan guifg=DarkCyan
+hi def link rustType          MoreMsg
 hi def link rustTodo          Todo
 hi def link rustAttribute     PreProc
 hi def link rustDerive        PreProc
-hi def link rustDefault       StorageClass
-hi def link rustStorage       StorageClass
+"hi def link rustDefault       StorageClass
+"hi def link rustStorage       StorageClass
+hi def link rustDefault       SpecialComment
+hi def link rustStorage       Label
 hi def link rustObsoleteStorage Error
 hi def link rustLifetime      Special
 hi def link rustLabel         Label
