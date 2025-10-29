@@ -17,12 +17,14 @@ syn match rustSymbol    '[,;:\.]'
 syn match Constant      '[{}\[\]()]'
 syn match Operator      '[\+\-\%=\/\^\&\*!?><\$|~#]'
 hi def rustSymbol ctermfg=DarkGray guifg=DarkGray
-syn match rustType      '\<[A-Z_]\+[a-z_]\+\w*\>'
-syn match rustMacro     '\<[A-Z_]\+\>'
+syn match rustType      '\<\w\+_\l\>'
+syn match rustType      '\<[_]*\u[A-Z_]*[a-z_]\+\w*\>'
+syn match Macro         '\<[_]*\u[A-Z_]*\>'
 syn match Repeat        '\([^\.]\(\.\|\(::\)\)\)\@<=\w\w*'
 syn match rustType      '\v(\.@1<!|\.\.)\zs<([iu][0-9]{1,3})?>' display
 syn match rustType      '\(:\s*&\?\)\@<=\w\w*\(\(\(\(\[.*\]\)\|\({.*}\)\|\(\w\+\)\|\(\*\|?\|!\)\)\s*\)*\)\@='
-syn match rustType      "\v\w+\ze\<.*\>" "foo<T>();
+syn match rustType      '\v\w+\ze\<.*\>' "foo<T>();
+syn match Function      '\v\w+\ze((\[.*\])|(\<.*\>))*\s*\('
 
 " Syntax definitions {{{1
 " Basic keywords {{{2
@@ -210,9 +212,9 @@ syn region rustGenericRegion display start=/<\%('\|[^[:cntrl:][:space:][:punct:]
 syn region rustGenericLifetimeCandidate display start=/\%(<\|,\s*\)\@<='/ end=/[[:cntrl:][:space:][:punct:]]\@=\|$/ contains=rustSigil,rustLifetime
 
 "rustLifetime must appear before rustCharacter, or chars will get the lifetime highlighting
-syn match     rustLifetime    display "\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*"
-syn match     rustLabel       display "\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*:"
-syn match     rustLabel       display "\%(\<\%(break\|continue\)\s*\)\@<=\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*"
+"syn match     rustLifetime    display "\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*"
+"syn match     rustLabel       display "\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*:"
+"syn match     rustLabel       display "\%(\<\%(break\|continue\)\s*\)\@<=\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*"
 syn match   rustCharacterInvalid   display contained /b\?'\zs[\n\r\t']\ze'/
 " The groups negated here add up to 0-255 but nothing else (they do not seem to go beyond ASCII).
 syn match   rustCharacterInvalidUnicode   display contained /b'\zs[^[:cntrl:][:graph:][:alnum:][:space:]]\ze'/
@@ -390,6 +392,14 @@ hi def link rustAsmDirSpec    rustKeyword
 hi def link rustAsmSym        rustKeyword
 hi def link rustAsmOptions    rustKeyword
 hi def link rustAsmOptionsKey rustAttribute
+hi def link rustSpecialChar   SpecialComment
+hi def link rustSpecialCharError   Exception
+
+syn match  Exception      '\(\W\@<=[&*]\+\ze\'\?\w\)\|\(\w\@<=[*]\+\ze\W\)'
+syn match  Label          "\v'\w+"
+syn match  rustCharacter  "'\\''" contains=rustSpecialChar
+syn match  rustCharacter  "'[^\\]'"
+syn region rustString     start=+[^&]\@<=[']+ end=+[']+ end=+$+ contains=rustSpecialChar,rustSpecialCharError,@Spell
 
 " Other Suggestions:
 " hi rustAttribute ctermfg=cyan
