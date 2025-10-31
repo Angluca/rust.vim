@@ -12,19 +12,22 @@ elseif exists("b:current_syntax")
     finish
 endif
 
-syn match PreProc       '[@]'
+syn match Exception     '[@?]'
 syn match rustSymbol    '[,;:\.]'
 syn match Constant      '[{}\[\]()]'
-syn match Operator      '[\+\-\%=\/\^\&\*!?><\$|~#]'
+syn match Operator      '[\+\-\%=\/\^\&\*!><\$|~#]'
 hi def rustSymbol ctermfg=DarkGray guifg=DarkGray
-syn match rustType      '\<\w\+_\l\>'
-syn match rustType      '\<[_]*\u[A-Z_]*[a-z_]\+\w*\>'
-syn match Macro         '\<[_]*\u[A-Z_]*\>'
-syn match Repeat        '\([^\.]\(\.\|\(::\)\)\)\@<=\w\w*'
-syn match rustType      '\v(\.@1<!|\.\.)\zs<([iu][0-9]{1,3})?>' display
-syn match rustType      '\(:\s*&\?\)\@<=\w\w*\(\(\(\(\[.*\]\)\|\({.*}\)\|\(\w\+\)\|\(\*\|?\|!\)\)\s*\)*\)\@='
-syn match rustType      '\v\w+\ze\<.*\>' "foo<T>();
-syn match Function      '\v\w+\ze((\[.*\])|(\<.*\>))*\s*\('
+syn match rustType      '\v<\w+_[tscemui]>'
+syn match Macro         '\v<[_]*\u[A-Z0-9_]*>'
+syn match rustType      '\v<[_]*\u[A-Z0-9_]*[a-z]+\w*>'
+syn match rustType      '\v\.?\zs<([iu][0-9]{1,3})?>'
+syn match Repeat        '\v([^\.](\.|::))@<=\w\w*'
+syn match rustMacro     '\v(::\s*)@<=[_]*\u\w*'
+syn match rustType      '\v\w+\ze(::|\<[.*]*\>)' "foo<T>()
+syn match Function      '\v[_]*\l\w*\ze((\[.*\])|((::)?\<.*\>))*\s*\('
+syn match rustType      '\v(([^:]:|-\>)\s*\&*)@<=\w\w*>'
+syn match Changed       '\v((type|impl|struct|enum|union)(\<.*\>)?\s*)@<=[_]*\u\w*\ze(\<.*\>)?\s*(\(|\{)'
+syn match rustMacro     '\v<\w+!>'
 
 " Syntax definitions {{{1
 " Basic keywords {{{2
@@ -34,7 +37,7 @@ syn keyword   rustRepeat loop while
 syn match     rustRepeat /\<for\>/
 " Highlight `for` keyword in `impl ... for ... {}` statement. This line must
 " be put after previous `syn match` line to overwrite it.
-syn match     rustKeyword /\%(\<impl\>.\+\)\@<=\<for\>/
+"syn match     rustKeyword /\%(\<impl\>.\+\)\@<=\<for\>/
 syn keyword   rustRepeat in
 syn keyword   rustTypedef type nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustStructure struct enum nextgroup=rustIdentifier skipwhite skipempty
@@ -53,7 +56,7 @@ syn keyword   rustKeyword     continue
 syn keyword   rustKeyword     crate
 syn keyword   rustKeyword     extern nextgroup=rustExternCrate,rustObsoleteExternMod skipwhite skipempty
 syn keyword   rustKeyword     fn nextgroup=rustFuncName skipwhite skipempty
-syn keyword   rustKeyword     impl let
+syn keyword   rustKeyword     impl let static const
 syn keyword   rustKeyword     macro
 syn keyword   rustKeyword     pub nextgroup=rustPubScope skipwhite skipempty
 syn keyword   rustKeyword     return
@@ -64,7 +67,7 @@ syn keyword   rustUnsafeKeyword unsafe
 syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 " FIXME: Scoped impl's name is also fallen in this category
 syn keyword   rustKeyword     mod trait nextgroup=rustIdentifier skipwhite skipempty
-syn keyword   rustStorage     move mut ref static const
+syn keyword   rustStorage     move mut ref
 syn match     rustDefault     /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
 syn keyword   rustTypedef     impl nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustAwait       await
@@ -91,7 +94,7 @@ syn keyword   rustReservedKeyword become do priv typeof unsized abstract virtual
 
 " Built-in types {{{2
 syn keyword   rustType        isize usize char bool u8 u16 u32 u64 u128 f32
-syn keyword   rustType        f64 i8 i16 i32 i64 i128 Self
+syn keyword   rustType        f64 i8 i16 i32 i64 i128 str Self
 
 " Things from the libstd v1 prelude (src/libstd/prelude/v1.rs) {{{2
 " This section is just straight transformation of the contents of the prelude,
@@ -130,11 +133,12 @@ syn keyword   rustBoolean     true false
 
 " If foo::bar changes to foo.bar, change this ("::" to "\.").
 " If foo::bar changes to Foo::bar, change this (first "\w" to "\u").
-syn match     rustModPath     "\w\(\w\)*::[^<]"he=e-3,me=e-3
-syn match     rustModPathSep  "::"
+"syn match     rustModPath     "\w\(\w\)*::[^<]"he=e-3,me=e-3
+"syn match     rustType        "\w\(\w\)*::[^<]"he=e-3,me=e-3
+"syn match     rustModPathSep  "::"
 
-syn match     rustFuncCall    "\w\(\w\)*("he=e-1,me=e-1
-syn match     rustFuncCall    "\w\(\w\)*::<"he=e-3,me=e-3 " foo::<T>();
+"syn match     rustFuncCall    "\w\(\w\)*("he=e-1,me=e-1
+"syn match     rustFuncCall    "\w\(\w\)*::<"he=e-3,me=e-3 " foo::<T>();
 
 " This is merely a convention; note also the use of [A-Z], restricting it to
 " latin identifiers rather than the full Unicode uppercase. I have not used
@@ -143,15 +147,15 @@ syn match     rustFuncCall    "\w\(\w\)*::<"he=e-3,me=e-3 " foo::<T>();
 
 syn match     rustOperator     display "\%(+\|-\|/\|*\|=\|\^\|&\||\|!\|>\|<\|%\)=\?"
 " This one isn't *quite* right, as we could have binary-& with a reference
-syn match     Exception   display /&\s\+[&~@*][^)= \t\r\n]/he=e-1,me=e-1
-syn match     Exception   display /[&~@*][^)= \t\r\n]/he=e-1,me=e-1
+"syn match     Exception   display /&\s\+[&~@*][^)= \t\r\n]/he=e-1,me=e-1
+"syn match     Exception   display /[&~@*][^)= \t\r\n]/he=e-1,me=e-1
 " This isn't actually correct; a closure with no arguments can be `|| { }`.
 " Last, because the & in && isn't a sigil
-syn match     rustOperator     display "&&\|||"
+"syn match     rustOperator     display "&&\|||"
 " This is rustArrowCharacter rather than rustArrow for the sake of matchparen,
 " so it skips the ->; see http://stackoverflow.com/a/30309949 for details.
-syn match     rustArrowCharacter display "->"
-syn match     rustQuestionMark display "?\([a-zA-Z]\+\)\@!"
+"syn match     rustArrowCharacter display "->"
+"syn match     rustQuestionMark display "?\([a-zA-Z]\+\)\@!"
 
 syn match     rustMacro       '\w\(\w\)*!' contains=rustAssert,rustPanic
 syn match     rustMacro       '#\w\(\w\)*' contains=rustAssert,rustPanic
@@ -329,7 +333,8 @@ hi def link rustCharacter     Character
 hi def link rustNumber        Number
 hi def link rustBoolean       Boolean
 hi def link rustEnum          rustType
-hi def link rustEnumVariant   rustConstant
+"hi def link rustEnumVariant   rustConstant
+hi def link rustEnumVariant   SpecialComment
 hi def link rustConstant      Constant
 hi def link rustSelf          Label
 hi def link rustFloat         Float
@@ -367,7 +372,7 @@ hi def link rustCommentBlockDocStar rustCommentBlockDoc
 hi def link rustCommentBlockDocError Error
 hi def link rustCommentDocCodeFence rustCommentLineDoc
 hi def link rustAssert        PreCondit
-hi def link rustPanic         PreCondit
+hi def link rustPanic         Exception
 "hi def link rustMacro         Added
 "hi def link rustMacro         Macro
 hi def link rustMacro         SpecialComment
@@ -395,11 +400,11 @@ hi def link rustAsmOptionsKey rustAttribute
 hi def link rustSpecialChar   SpecialComment
 hi def link rustSpecialCharError   Exception
 
-syn match  Exception      '\(\W\@<=[&*]\+\ze\'\?\w\)\|\(\w\@<=[*]\+\ze\W\)'
-syn match  Label          "\v'\w+"
-syn match  rustCharacter  "'\\''" contains=rustSpecialChar
-syn match  rustCharacter  "'[^\\]'"
-syn region rustString     start=+[^&]\@<=[']+ end=+[']+ end=+$+ contains=rustSpecialChar,rustSpecialCharError,@Spell
+syn match Exception      '\v(\W@<=[~&*]+\ze[\(\[\{\<]*\'?\w)|(\w@<=[*]+\ze\W)'
+syn match Label          "\v'\w+>"
+"syn match  rustCharacter  "'.*'" contains=rustSpecialChar,@Spell
+syn match rustCharacter  "'\\''" contains=rustSpecialChar
+syn match rustCharacter  "'[^\\]'"
 
 " Other Suggestions:
 " hi rustAttribute ctermfg=cyan
