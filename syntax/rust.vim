@@ -27,7 +27,8 @@ syn match rustMacro     '\v(::\s*)@<=[_]*\u\w*'
 syn match rustType      '\v\w+\ze(::|\<[.*]*\>)' "foo<T>()
 syn match Function      '\v[_]*\l\w*\ze((\[.*\])|((::)?\<.*\>))*\s*\('
 "syn match rustType      '\v(([^:]:|-\>)\s*\&*)@<=\w\w*>'
-syn match Changed       '\v((type|impl|struct|enum|union|trait)(\<.*\>)?\s*)@<=[_]*\u\w*\ze(\<.*\>)?\s*(\(|\{)'
+syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s*[_]*\u\w*'
+syn match Changed       '\v(impl\s*(\<.{-}\>)?\s*((\w+\s*(\<.{-}\>|\[.{-}\])?)?\s*\+\s*)*)@<=\s*[_]*\u\w*'
 syn match rustMacro     '\v<\w+!>'
 
 " Syntax definitions {{{1
@@ -70,7 +71,7 @@ syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 syn keyword   rustKeyword     mod trait nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustStorage     move mut ref
 syn match     rustDefault     /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
-syn keyword   rustTypedef     impl nextgroup=rustIdentifier skipwhite skipempty
+"syn keyword   rustTypedef     impl nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustAwait       await
 syn match     rustKeyword     /\<try\>!\@!/ display
 
