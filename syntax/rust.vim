@@ -26,8 +26,8 @@ syn match Repeat        '\v([^\.](\.|::))@<=\w\w*'
 syn match rustMacro     '\v(::\s*)@<=[_]*\u\w*'
 syn match rustType      '\v\w+\ze(::|\<[.*]*\>)' "foo<T>()
 syn match Function      '\v[_]*\l\w*\ze((\[.*\])|((::)?\<.*\>))*\s*\('
-"syn match rustType      '\v(([^:]:|-\>)\s*\&*)@<=\w\w*>'
-syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s*[_]*\u\w*'
+syn match rustType      '\v(([^:]:|-\>)\s*\&*)@<=\w\w*>'
+syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\u\w*'
 syn match Changed       '\v(impl\s*(\<.{-}\>)?\s*((\w+\s*(\<.{-}\>|\[.{-}\])?)?\s*\+\s*)*)@<=\s*[_]*\u\w*'
 syn match rustMacro     '\v<\w+!>'
 
@@ -65,11 +65,12 @@ syn keyword   rustKeyword     return
 syn keyword   rustKeyword     yield
 syn keyword   rustSuper       super
 syn keyword   rustKeyword     where
-syn keyword   rustUnsafeKeyword unsafe
+syn keyword   rustUnsafe      unsafe
+syn keyword   rustSafe        safe
 syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 " FIXME: Scoped impl's name is also fallen in this category
 syn keyword   rustKeyword     mod trait nextgroup=rustIdentifier skipwhite skipempty
-syn keyword   rustStorage     move mut ref
+syn keyword   rustStorage     move mut ref raw
 syn match     rustDefault     /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
 "syn keyword   rustTypedef     impl nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustAwait       await
@@ -351,7 +352,9 @@ hi def link rustExistential   rustKeyword
 hi def link rustPubScopeDelim Delimiter
 hi def link rustPubScopeCrate rustKeyword
 hi def link rustSuper         rustKeyword
-hi def link rustUnsafeKeyword Exception
+hi def link rustUnsafe        Exception
+"hi def link rustSafe          Added
+hi def link rustSafe          PreProc
 hi def link rustReservedKeyword Error
 hi def link rustRepeat        Repeat
 hi def link rustConditional   Conditional
