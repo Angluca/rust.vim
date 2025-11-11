@@ -70,7 +70,8 @@ syn keyword   rustSafe        safe
 syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 " FIXME: Scoped impl's name is also fallen in this category
 syn keyword   rustKeyword     mod trait nextgroup=rustIdentifier skipwhite skipempty
-syn keyword   rustStorage     move mut ref raw
+syn keyword   rustStorage     move mut raw
+syn keyword   rustException   ref
 syn match     rustDefault     /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
 "syn keyword   rustTypedef     impl nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustAwait       await
@@ -389,6 +390,7 @@ hi def link rustDerive        PreProc
 "hi def link rustDefault       StorageClass
 "hi def link rustStorage       StorageClass
 hi def link rustDefault       SpecialComment
+hi def link rustException     Exception
 hi def link rustStorage       Label
 hi def link rustObsoleteStorage Error
 hi def link rustLifetime      Special
