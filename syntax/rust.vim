@@ -31,6 +31,10 @@ syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\u
 syn match Changed       '\v(impl\s*(\<.{-}\>)?\s*((\w+\s*(\<.{-}\>|\[.{-}\])?)?\s*\+\s*)*)@<=\s*[_]*\u\w*'
 syn match rustMacro     '\v<\w+!>'
 
+" Makepad shader types
+syn keyword   rustKeyword     uniform instance varying link
+syn keyword   rustType        float int vec2 vec3 vec4 mat2 mat3 mat4 texture2d textureOES
+
 " Syntax definitions {{{1
 " Basic keywords {{{2
 syn keyword   rustConditional match if else
