@@ -139,6 +139,11 @@ function GetRustIndent(lnum)
         let prevline = s:get_line_trimmed(prevlinenum)
     endwhile
 
+    " For Makepad dsl align
+    if prevline =~# '\v^\s*}[\s;]*$' || prevline =~# '\v^\s*\w+\s*:\s*.*[;\.#/\)}\],0-9a-zA-Z_"]\s*$'
+        return indent(prevlinenum)
+    endif
+
     " A standalone '{', '}', or 'where'
     let l:standalone_open = line =~# '\V\^\s\*{\s\*\$'
     let l:standalone_close = line =~# '\V\^\s\*}\s\*\$'
