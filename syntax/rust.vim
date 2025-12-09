@@ -32,8 +32,18 @@ syn match Changed       '\v(impl\s*(\<.{-}\>)?\s*((\w+\s*(\<.{-}\>|\[.{-}\])?)?\
 syn match rustMacro     '\v<\w+!>'
 
 " Makepad shader types
-syn keyword   rustKeyword     uniform instance varying link
-syn keyword   rustType        float int vec2 vec3 vec4 mat2 mat3 mat4 texture2d textureOES
+syn keyword   rustKeyword   uniform instance varying var link
+syn keyword   rustKeyword   vertex fragment
+syn keyword   rustType      atomic_i32 atomic_u32 atomic_int atomic_uint
+syn keyword   rustType      texture texture2d textureOES
+syn match     rustType      '\v<bool[234]?>'
+syn match     rustType      '\v<int[234]?>'
+syn match     rustType      '\v<uint[234]?>'
+syn match     rustType      '\v<half[234]?>'
+syn match     rustType      '\v<float([234](x[234])?)?>'
+syn match     rustType      '\v<[dbui]?vec[234]>'
+syn match     rustType      '\v<vec[234][dbfhui]?>'
+syn match     rustType      '\v<mat[234](x[234]f)?>'
 
 " Syntax definitions {{{1
 " Basic keywords {{{2

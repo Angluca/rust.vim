@@ -140,7 +140,7 @@ function GetRustIndent(lnum)
     endwhile
 
     " For Makepad dsl align
-    if prevline =~# '\v^\s*}[\s;]*$' || prevline =~# '\v^\s*\w+\s*:\s*.*[;\.#/\)}\],0-9a-zA-Z_"]\s*$'
+    if prevline =~# '\v^\s*}[\s;]*$' || prevline =~# '\v^\s*\w+\s*[:=]\s*.*[;\.#/\)}\],0-9a-zA-Z_"]\s*$'
         return indent(prevlinenum)
     endif
 
