@@ -16,7 +16,6 @@ syn match Exception     '[@?]'
 syn match rustSymbol    '[,;:\.]'
 syn match Constant      '[{}\[\]()]'
 syn match Operator      '[\+\-\%=\/\^\&\*!><\$|~#]'
-"hi def rustSymbol ctermfg=DarkGray guifg=DarkGray
 hi def link rustSymbol  Changed
 syn match rustType      '\v<\w+_[tscemui]>'
 syn match Macro         '\v<[_]*\u[A-Z0-9_]*>'
@@ -24,7 +23,8 @@ syn match rustType      '\v<[_]*\u[A-Z0-9_]*[a-z]+\w*>'
 syn match rustType      '\v\.?\zs<([iu][0-9]{1,3})?>'
 syn match Repeat        '\v([^\.](\.|::))@<=\w\w*'
 syn match rustMacro     '\v(::\s*)@<=[_]*\u\w*'
-syn match rustType      '\v\w+\ze(::|\<[.*]*\>)' "foo<T>()
+"syn match rustType      '\v\w+\ze(::|\<[.*]*\>)' "foo<T>()
+syn match rustType      '\v<\w+>\ze(::|\<(\w+\s*(\<.*\>|\[.*\])?\s*[,]?\s*)*\>)' "foo<T>()
 syn match Function      '\v[_]*\l\w*\ze((\[.*\])|((::)?\<.*\>))*\s*\('
 syn match rustType      '\v(([^:]:|-\>)\s*\&*)@<=\w\w*>'
 syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\u\w*'
