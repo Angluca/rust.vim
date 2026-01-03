@@ -27,7 +27,8 @@ syn match rustMacro     '\v(::\s*)@<=[_]*\u\w*'
 syn match rustType      '\v<\w+>\ze(::|\<(\w+\s*(\<.*\>|\[.*\])?\s*[,]?\s*)*\>)' "foo<T>()
 syn match Function      '\v[_]*\l\w*\ze((\[.*\])|((::)?\<.*\>))*\s*\('
 syn match rustType      '\v(([^:]:|-\>)\s*\&*)@<=\w\w*>'
-syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\u\w*'
+"syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\u\w*'
+syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\w+'
 syn match Changed       '\v(impl\s*(\<.{-}\>)?\s*((\w+\s*(\<.{-}\>|\[.{-}\])?)?\s*\+\s*)*)@<=\s*[_]*\u\w*'
 syn match rustMacro     '\v<\w+!>'
 
@@ -59,16 +60,14 @@ syn keyword   rustTypedef type nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustStructure struct enum nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustUnion union nextgroup=rustIdentifier skipwhite skipempty contained
 syn match rustUnionContextual /\<union\_s\+\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*/ transparent contains=rustUnion
-syn keyword   rustOperator    as
 syn keyword   rustExistential existential nextgroup=rustTypedef skipwhite skipempty contained
 syn match rustExistentialContextual /\<existential\_s\+type/ transparent contains=rustExistential,rustTypedef
 
 syn match     rustAssert      "\<assert\(\w\)*!" contained
 syn match     rustPanic       "\<panic\(\w\)*!" contained
 syn match     rustAsync       "\<async\%(\s\|\n\)\@="
-syn keyword   rustKeyword     break
+syn keyword   rustKeyword     break continue
 syn keyword   rustKeyword     box
-syn keyword   rustKeyword     continue
 syn keyword   rustKeyword     crate
 syn keyword   rustKeyword     extern nextgroup=rustExternCrate,rustObsoleteExternMod skipwhite skipempty
 syn keyword   rustKeyword     fn nextgroup=rustFuncName skipwhite skipempty
@@ -78,7 +77,7 @@ syn keyword   rustKeyword     pub nextgroup=rustPubScope skipwhite skipempty
 syn keyword   rustKeyword     return
 syn keyword   rustKeyword     yield
 syn keyword   rustSuper       super
-syn keyword   rustKeyword     where
+syn keyword   rustKeyword     where as
 syn keyword   rustUnsafe      unsafe
 syn keyword   rustSafe        safe
 syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
