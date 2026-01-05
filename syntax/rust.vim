@@ -32,19 +32,18 @@ syn match Changed       '\v((type|struct|enum|union|trait)(\<.*\>)?)@<=\s+[_]*\w
 syn match Changed       '\v(impl\s*(\<.{-}\>)?\s*((\w+\s*(\<.{-}\>|\[.{-}\])?)?\s*\+\s*)*)@<=\s*[_]*\u\w*'
 syn match rustMacro     '\v<\w+!>'
 
-" Makepad shader types
-syn keyword   rustKeyword   uniform instance varying var link
-syn keyword   rustKeyword   vertex fragment
-syn keyword   rustType      atomic_i32 atomic_u32 atomic_int atomic_uint
-syn keyword   rustType      texture texture2d textureOES
-syn match     rustType      '\v<bool[234]?>'
-syn match     rustType      '\v<int[234]?>'
-syn match     rustType      '\v<uint[234]?>'
-syn match     rustType      '\v<half[234]?>'
-syn match     rustType      '\v<float([234](x[234])?)?>'
-syn match     rustType      '\v<[dbui]?vec[234]>'
-syn match     rustType      '\v<vec[234][dbfhui]?>'
-syn match     rustType      '\v<mat[234](x[234]f)?>'
+" -- shader
+syn match  rustKeyword  '\v<(uniform|instance|varying|var|vertex|fragment|in|out|link)>\s'
+syn match  rustType     '\v<(texture|texture2D)>\s'
+syn match  rustType     '\v<bool[234]?>'
+syn match  rustType     '\v<int[234]?>'
+syn match  rustType     '\v<uint[234]?>'
+syn match  rustType     '\v<half[234]?>'
+syn match  rustType     '\v<float([234](x[234])?)?>'
+syn match  rustType     '\v<[dbui]?vec[234]>'
+syn match  rustType     '\v<vec[234][dbfhui]?>'
+syn match  rustType     '\v<(vec|mat|list)\ze\['
+syn match  rustType     '\v<mat[234](x[234]f)?>'
 
 " Syntax definitions {{{1
 " Basic keywords {{{2
